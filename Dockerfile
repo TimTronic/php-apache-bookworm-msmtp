@@ -1,4 +1,6 @@
-FROM php:apache-bookworm
+# Debian 13 (trixie), the current stable. The image keeps its "bookworm" name
+# because every site's compose file pulls it by that name.
+FROM php:apache-trixie
 
 # Require the emergency PHP fixes even while upstream images are still rebuilding.
 COPY update-php-security.sh /usr/local/sbin/update-php-security
