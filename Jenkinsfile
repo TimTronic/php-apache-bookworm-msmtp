@@ -24,7 +24,11 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build(env.DOCKER_IMAGE_NAME, '--pull -f ' + env.DOCKERFILE_PATH + ' .')
+                    // --no-cache: --pull alone only refreshes the base image. While its
+                    // digest is unchanged, the apt-get dist-upgrade layer comes from cache,
+                    // so the nightly build re-pushed a stale image and missed Debian
+                    // security fixes (apache2 2.4.71, CVE-2026-119618).
+                    docker.build(env.DOCKER_IMAGE_NAME, '--pull --no-cache -f ' + env.DOCKERFILE_PATH + ' .')
                 }
             }
         }
